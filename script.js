@@ -5,23 +5,31 @@ const button = document.getElementById('guess-button')
 const input = document.getElementById('guess-input')
 const valor = input.value
 let diccionario = ['APPLE', 'HOUSE', 'WINGS', 'YOUTH', 'PAPER']
+let palabra
+button.disabled = true
+input.disabled = true
 
-
-fetch("https://random-word-api.herokuapp.com/word?length=5")
-    .then(response => response.json())
-    .then(response => {
-        console.log(response[0].toUpperCase())
-        palabra= response[0].toUpperCase()
-    }).catch(error => alert ("Ocurrio un error, codigo 404 "))
-
-let palabra = diccionario[Math.floor(Math.random() * diccionario.length)];
 // Eventos
 window.addEventListener('load', init)
 button.addEventListener('click', intentar)
 
 //Funciones
-function init(){
+async function init(){
     console.log('Esto se ejecuta solo cuando se carga la pagina web')
+    try{
+        await fetch("https://random-word-api.herokuapp.com/word?length=5")
+    .then(response => response.json())
+    .then(response => {
+        console.log(response[0].toUpperCase())
+        palabra= response[0].toUpperCase()
+        button.disabled = false
+        input.disabled = false
+    })}catch(error){
+        alert ("Ocurrio un error, codigo 404 ")
+        palabra = diccionario[Math.floor(Math.random() * diccionario.length)];
+        button.disabled = false
+        input.disabled = false
+    }
 }
 
 function leerIntento(){
